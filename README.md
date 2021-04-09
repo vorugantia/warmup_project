@@ -10,7 +10,7 @@ Between the two directives in `run()`, I call my `_pause()` function which sends
 
 Finally, I specify a callback function on the event that the program gets interrupted (with CTRL+C), I called it `_stop_robot()`. This function just publishes an empty Twist message to the topic, which stops the robot in place.
 
-
+![GIF](https://github.com/vorugantia/warmup_project/blob/main/gifs/drive_square.gif)
 
 ## 2. Person follower
 
