@@ -38,7 +38,7 @@ My plan was to have the robot move forward until LiDAR scanner detected the wall
 
 `_scan()`: This is the callback function upon scan messages received from LiDAR scanner. in `stage = 1`, the robot moves forward at constant speed until a wall is within vicinity directly ahead (I used 0.3m). Then enter `stage = 2`, where the robot turns clockwise until facing parallel to the wall. In order to determine when the robot was facing parallel to the wall, I did some trigonometry:
 
-## TODO: upload photo
+![PHOTO](https://github.com/vorugantia/warmup_project/blob/main/gifs/IMG_6212.jpg)
 
 Basically, we want to find out when the "front-right" sensor (at 315deg) and the "back-right" sensor (at 225deg) both read the value of the "right" sensor (at 270deg) times sqrt(2). This is trivially derived from Pythagorean's Thm. (I also add an error buffer of 0.025m.) Once this condition is met, the program goes back to `stage = 1` and repeats.
 
