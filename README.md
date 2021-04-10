@@ -14,7 +14,19 @@ Finally, I specify a callback function on the event that the program gets interr
 
 ## 2. Person follower
 
-Description, code explanation, gif
+My approach as to use the LiDAR scanner to capture the angle and distance of the person, and then to move towards that person until reaching a distance of 0.8m. Rotation is handled by proportional control relative to how far in the peripheral the person is situated relative to the robot. Motion forward is at a constant value, i.e. not proportional control. The robot first rotates towards the person in-place, and once it is roughly facing the person, it begins its motion forward.
+
+`__init__()`: Initialize node, publisher to '/cmd_vel' topic, subscriber to '/scan' topic.
+
+`_publish_vel()`: an internal helper function that publishes a motion directive to the '/cmd_vel' topic with specified linear/angular velocity parameters.
+
+`_scan()`: This is the callback function upon scan messages received from LiDAR scanner. After locating exactly what angle and distance the person is relative to the robot, it handles the following cases: 1) If person is not in the vicinity of the scanner or too close (<0.8m), stop moving; 2) Set the angular velocity of robot according to a proportional control. 3) Stop micro-adjusting angle if the person is within 10 degrees of the robot's FOV (prevents oscillations); 4) Only move the robot forward if it is first facing the person (within 45 degrees of robot's FOV). The result angular/linear velocities are passed to `_publish_vel()`.
+
+`run()`: Spins turtlebot
+
+`_stop_robot()`: See drive_in_square above.
+
+![GIF](https://github.com/vorugantia/warmup_project/blob/main/gifs/follow_person.gif)
 
 ## 3. Wall follower
 
@@ -22,12 +34,13 @@ Description, code explanation, gif
 
 ## 4. Challenges
 
-(1 paragraph)
+One of the big challenges for me was to figure out how to get the robot to follow the person. Before trying a proportional control approach, I just set the angular velocity to a constant value with the instruction to rotate until the person was within robot's FOV. However this gave me a range of problems, from overshooting to moving erratically and seemingly uncontrollably. Furthermore, the debugging process was quite tedious when I was trying to figure out which lines were giving faulty published messages. Print statements helped me a lot. Furthermore, I thought back to lecture notes and implemented a proportional control approach, and I noticed immediate improvement with the robot's performance. All that I had to do was tweak the constant k a little bit.
 
 ## 5. Future work
 
-(1 paragraph)
+For my person follower program, I would be interested in applying proportional control to linear velocity. Another cool task within this project would be to have the robot always follow the person to their right side (or left side). This would require the robot to figure out which direction the person themself is facing, or perhaps which direction the person is walking. 
 
 ## 6. Takeaways
 
-(2 bullet points)
+1. Proportional control helped me solve the person follower task.
+2. In general, you have to be careful when you publish overlapping messages to the robot, such that one doesn't incorrectly come before the other, or you have to be careful to ensure a particular message stops getting published when the correct observation of the environment is met.
